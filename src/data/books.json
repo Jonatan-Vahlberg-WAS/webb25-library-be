@@ -1,0 +1,47 @@
+[
+  {
+    "book_id": 1,
+    "title": "Pippi Långstrump",
+    "author": "Astrid Lindgren",
+    "description": "The strongest girl in the world.",
+    "published_year": 1945,
+    "copies": 5,
+    "genre": "fiction"
+  },
+  {
+    "book_id": 2,
+    "title": "Män som hatar kvinnor",
+    "author": "Stieg Larsson",
+    "description": "A crime novel with Mikael Blomkvist and Lisbeth Salander.",
+    "published_year": 2005,
+    "copies": 3,
+    "genre": "fiction"
+  },
+  {
+    "book_id": 3,
+    "title": "Min europeiska familj",
+    "author": "Karin Bojs",
+    "description": "A journey through European prehistory.",
+    "published_year": 2015,
+    "copies": 2,
+    "genre": "nonfiction"
+  },
+  {
+    "book_id": 4,
+    "title": "Röda rummet",
+    "author": "August Strindberg",
+    "description": "A young civil servant leaves his post in Stockholm.",
+    "published_year": 1879,
+    "copies": 4,
+    "genre": "fiction"
+  },
+  {
+    "book_id": 5,
+    "title": "Lagom",
+    "author": "Lola Akinmade Åkerström",
+    "description": "The Swedish idea of balance.",
+    "published_year": 2017,
+    "copies": 3,
+    "genre": "nonfiction"
+  }
+]
