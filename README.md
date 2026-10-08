@@ -9,3 +9,5 @@ open http://localhost:3000
 
 Copy `example.env` to `.env` and fill in your Supabase URL and key.
 Run `supabase_seed.sql` in the Supabase SQL editor to create books and loans.
+
+Authentication is not wired up yet. Follow `AUTHENTICATION.md` to add register, login, and a protected `POST /books`.
