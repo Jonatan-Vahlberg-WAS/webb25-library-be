@@ -39,7 +39,28 @@ Create `src/types/supabase.d.ts`.
 import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
 
-export type BasicSupabaseClient = ReturnType<typeof createServerClient>;
+export type Database = {
+  public: {
+    Tables: {
+      books: {
+        Row: Book;
+        Insert: NewBook;
+        Update: Partial<Book>;
+        Relationships: [];
+      };
+      loans: {
+        Row: Loan;
+        Insert: NewLoan;
+        Update: Partial<Loan>;
+        Relationships: [];
+      };
+    };
+    Views: { [_ in never]: never };
+    Functions: { [_ in never]: never };
+  };
+};
+
+export type BasicSupabaseClient = ReturnType<typeof createServerClient<Database>>;
 
 declare module "hono" {
   interface ContextVariableMap {
@@ -85,10 +106,10 @@ import { HTTPException } from "hono/http-exception";
 import { createServerClient } from "@supabase/ssr";
 
 import { env } from "../env.js";
-import type { BasicSupabaseClient } from "../types/supabase.js";
+import type { BasicSupabaseClient, Database } from "../types/supabase.js";
 
 function createSupabaseForRequest(c: Context): BasicSupabaseClient {
-  return createServerClient(env.supabaseUrl, env.supabaseKey, {
+  return createServerClient<Database>(env.supabaseUrl, env.supabaseKey, {
     cookies: {
       getAll() {
         const cookies = getCookie(c);
@@ -125,7 +146,7 @@ async function setSupabaseContext(c: Context): Promise<void> {
 
   const supabase = createSupabaseForRequest(c);
 
-  c.set("supabase", supabase as any);
+  c.set("supabase", supabase as BasicSupabaseClient);
 
   const {
     data: { user },
@@ -242,3 +263,20 @@ Content-Type: application/json
 ```
 
 `GET /books` still works without logging in.
+
+## 10. Pass the request client into the database
+
+The client in `src/lib/supabase.ts` is not tied to the logged-in session. After `optionalAuth` runs, read the request client in the route and pass it into the database functions. Do the same for books and loans.
+
+`src/database/books.ts` keeps the typed list query commented out and types the filter argument as `any`. That avoids the generic error while the functions still import the shared client. Uncomment `selectBooks` and `BookListQuery` when the functions take the request client, and use `BookListQuery` instead of `any`.
+
+Books
+
+- [ ] In each handler in `src/routes/books.ts`, read the client stored on the Hono context. See [Hono context variables](https://hono.dev/docs/api/context#set-get).
+- [ ] Pass that client into `getBooks`, `getBooksByGenre`, `getBookById`, `createBook`, `updateBookById`, and `deleteBookById`.
+- [ ] Give those functions the client as their first argument, and use it instead of the imported `sb`. Building a query starts with [Supabase `select`](https://supabase.com/docs/reference/javascript/select).
+- [ ] Uncomment `selectBooks` and `BookListQuery` in `src/database/books.ts`. Use `BookListQuery` as the filter argument instead of `any`.
+
+Loans
+
+- [ ] Do the same in `src/routes/loans.ts` and `src/database/loans.ts`: read the request client, pass it in, and stop using the shared `sb` import.

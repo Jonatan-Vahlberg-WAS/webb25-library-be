@@ -1,7 +1,4 @@
-import type {
-  PostgrestFilterBuilder,
-  PostgrestSingleResponse,
-} from "@supabase/supabase-js";
+import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 import { sb } from "../lib/supabase.js";
 
@@ -28,8 +25,17 @@ type BookListFilter = Partial<{
   copies: number;
 }>;
 
+//TODO: add this back in when we have the BasicSupabaseClient type
+// import type { BasicSupabaseClient } from "../types/supabase.js";
+//
+// function selectBooks(sb: BasicSupabaseClient) {
+//   return sb.from(TABLE_NAME).select(SELECT_QUERY);
+// }
+//
+// type BookListQuery = ReturnType<typeof selectBooks>;
+
 function buildBooksFilter(
-  query: PostgrestFilterBuilder<any, any, any, any>,
+  query: any,
   filters: BookListFilter,
 ) {
   if (filters.maxYear) {
